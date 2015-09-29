@@ -1,6 +1,6 @@
 # Ignore npm files/folders
 node_modules
-js/dep/
+js/dep/*
 npm-debug.log
 
 # Ignore reports folder
