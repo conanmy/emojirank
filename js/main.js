@@ -28,7 +28,7 @@ app.controller('SearchController', function($scope, $http, $q) {
 
                 getCommitterAndEmojiurl(function(committerMap) {
                     gatheredComments
-                        .filter(emojiCommentFilter)
+                        .filter($scope.emojiCommentFilter)
                         .map(function(comment) {
                             if (committerMap[comment.user.id]) {
                                 var commiter = committerMap[comment.user.id];
@@ -62,6 +62,10 @@ app.controller('SearchController', function($scope, $http, $q) {
             });
         });
 
+        /**
+         * getCommitterAndEmojiur
+         * @param  {Function} callback things to do with the data
+         */
         function getCommitterAndEmojiurl(callback) {
             $q.all([
                 request(basicUrl + 'repos/' + repos + '/commits'),
@@ -70,38 +74,47 @@ app.controller('SearchController', function($scope, $http, $q) {
                 $scope.emojiurls = responses[1].data;
 
                 var commits = responses[0].data;
-                var committerMap = {};
-                commits.map(function(commit) {
-                    if (commit.committer
-                        && committerMap[commit.committer.id] === undefined) {
-                        committerMap[commit.committer.id] = {
-                            id: commit.committer.id,
-                            name: commit.committer.login,
-                            emojis: [],
-                            emojiDetail: {},
-                            avatar_url: commit.committer.avatar_url
-                        };
-                    }
-                });
-
-                callback(committerMap);
+                callback($scope.getCommitterMapFromCommits(commits));
             }, function() {
                 alert('Error getting commits');
             });
-        }
+        };
+    };
 
-        function emojiCommentFilter(comment) {
-            var regex = /(:(\w|\+|\-)+:)/g;
-            var emojis = comment.body.match(regex);
-            // Todo: recheck emoji with emojiurl map
-            if (emojis !== null && emojis.length > 0) {
-                console.log(comment.body + 'by ' + comment.user.id);
-                emojis = emojis.map(function(emoji) {
-                    return emoji.slice(1, emoji.length - 1);
-                });
-                comment.emojis = emojis;
-                return true;
+    $scope.getCommitterMapFromCommits = function(commits) {
+        var committerMap = {};
+        commits.map(function(commit) {
+            if (commit.committer
+                && committerMap[commit.committer.id] === undefined) {
+                committerMap[commit.committer.id] = {
+                    id: commit.committer.id,
+                    name: commit.committer.login,
+                    emojis: [],
+                    emojiDetail: {},
+                    avatar_url: commit.committer.avatar_url
+                };
             }
+        });
+        return committerMap;
+    };
+
+    /**
+     * emojiCommentFilter
+     * @param  {Object} comment
+     * @return {boolean}
+     */
+    $scope.emojiCommentFilter = function(comment) {
+        var regex = /(:(\w|\+|\-)+:)/g;
+        var emojis = comment.body.match(regex);
+        // Todo: recheck emoji with emojiurl map
+        if (emojis !== null && emojis.length > 0) {
+            emojis = emojis.map(function(emoji) {
+                return emoji.slice(1, emoji.length - 1);
+            });
+            comment.emojis = emojis;
+            return true;
+        } else {
+            return false;
         }
     };
 });

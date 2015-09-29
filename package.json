@@ -1,0 +1,29 @@
+{
+  "name": "emojirank",
+  "version": "1.0.0",
+  "description": "A webpage for you to see how frequently committers use emojis in pull requests of a specific repository.",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start my.conf.js --log-level debug --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conanmy/emojirank.git"
+  },
+  "keywords": [
+    "github",
+    "api",
+    "angularjs"
+  ],
+  "author": "Frank Ma",
+  "license": "ISC",
+  "dependencies": {
+    "express": "~4.9.x",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.10",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-cli": "^0.1.1",
+    "karma-jasmine": "^0.3.6",
+    "serve-static": "^1.9.2"
+  }
+}

@@ -1,0 +1,8 @@
+# Ignore npm files/folders
+node_modules
+js/dep/
+npm-debug.log
+
+# Ignore reports folder
+reports
+coverage
