@@ -38,11 +38,10 @@ body {
     <div class="result">
         <ul>
             <li ng-repeat="committer in committers">
-                <span>{{name}}</span>
                 <img src="{{committer.avatar_url}}" />
-                <span ng-repeat="emoji in committer.emojiDetail">
-                    <img src="{{emoji.url}}" />
-                    {{emoji.count}}
+                <span ng-repeat="(emoji, count) in committer.emojiDetail">
+                    <img src="{{emojiurls[emoji]}}" />
+                    {{count}}
                 </span>
             </li>
         </ul>

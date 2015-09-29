@@ -26,7 +26,7 @@ app.controller('SearchController', function($scope, $http, $q) {
                     gatheredComments = gatheredComments.concat(res.data);
                 });
 
-                getCommitterAndEmojiurl(function(committerMap, emojiurls) {
+                getCommitterAndEmojiurl(function(committerMap) {
                     gatheredComments
                         .filter(emojiCommentFilter)
                         .map(function(comment) {
@@ -46,17 +46,14 @@ app.controller('SearchController', function($scope, $http, $q) {
                         var emojiDetail = committer.emojiDetail;
                         committer.emojis.map(function(emoji) {
                             if (emojiDetail[emoji] === undefined) {
-                                emojiDetail[emoji] = {
-                                    count: 1,
-                                    url: emojiurls[emoji]
-                                };
+                                emojiDetail[emoji] = 1;
                             } else {
-                                emojiDetail[emoji].count++;
+                                emojiDetail[emoji]++;
                             }
                         });
                     });
                     committerArray.sort(function(a, b) {
-                        return a.emojis.length - b.emojis.length;
+                        return b.emojis.length - a.emojis.length;
                     });
                     $scope.committers = committerArray;
                 });
@@ -70,9 +67,9 @@ app.controller('SearchController', function($scope, $http, $q) {
                 request(basicUrl + 'repos/' + repos + '/commits'),
                 request(basicUrl + 'emojis')
             ]).then(function(responses){
-                var commits = responses[0].data;
-                var emojiurls = responses[1].data;
+                $scope.emojiurls = responses[1].data;
 
+                var commits = responses[0].data;
                 var committerMap = {};
                 commits.map(function(commit) {
                     if (commit.committer
@@ -87,7 +84,7 @@ app.controller('SearchController', function($scope, $http, $q) {
                     }
                 });
 
-                callback(committerMap, emojiurls);
+                callback(committerMap);
             }, function() {
                 alert('Error getting commits');
             });
