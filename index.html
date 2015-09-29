@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="Search">
+<head>
+<title>Emoji Rank</title>
+<style>
+body {
+    font-family: 'Microsoft Yahei';
+}
+.searhbar input {
+    height: 30px;
+    width: 250px;
+    line-height: 20px;
+}
+.searhbar button {
+    height: 36px;
+    width: 100px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.result ul img {
+    width: 50px;
+    height: 50px;
+}
+.result span img {
+    width: 20px;
+    height: 20px;
+}
+</style>
+</head>
+<body>
+<div ng-controller="SearchController">
+    <p>See how frequently committers use emojis in pull request review comments:</p>
+    <div class="searhbar">
+        Enter a repository:
+        <input type="text" ng-model="input" placeholder=":owner/:repo" />
+        <button ng-click="search(input)">Go</button>
+    </div>
+    <div class="result">
+        <ul>
+            <li ng-repeat="committer in committers">
+                <span>{{name}}</span>
+                <img src="{{committer.avatar_url}}" />
+                <span ng-repeat="emoji in committer.emojiDetail">
+                    <img src="{{emoji.url}}" />
+                    {{emoji.count}}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="js/dep/angular/angular.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
